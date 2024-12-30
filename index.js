@@ -23,6 +23,15 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    // ALL DATABASE COLLECTION//
+    const menuCollections = client.db("CuisineCanvas").collection("menu");
+
+    // GET ALL MENU DATA //
+
+    app.get("/menu", async (req, res) => {
+      const result = await menuCollections.find().toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
