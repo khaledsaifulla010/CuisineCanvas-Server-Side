@@ -25,11 +25,20 @@ async function run() {
   try {
     // ALL DATABASE COLLECTION//
     const menuCollections = client.db("CuisineCanvas").collection("menu");
+    const cartCollections = client.db("CuisineCanvas").collection("carts");
 
     // GET ALL MENU DATA //
 
     app.get("/menu", async (req, res) => {
       const result = await menuCollections.find().toArray();
+      res.send(result);
+    });
+
+    // POST CART ITEMS //
+
+    app.post("/carts", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollections.insertOne(cartItem);
       res.send(result);
     });
   } finally {
