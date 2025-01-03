@@ -34,6 +34,13 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL CARTS ITEMS //
+
+    app.get("/carts", async (req, res) => {
+      const result = await cartCollections.find().toArray();
+      res.send(result);
+    });
+
     // POST CART ITEMS //
 
     app.post("/carts", async (req, res) => {
