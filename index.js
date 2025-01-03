@@ -34,10 +34,21 @@ async function run() {
       res.send(result);
     });
 
-    // GET ALL CARTS ITEMS //
+    // // GET ALL CARTS ITEMS //
+
+    // app.get("/carts", async (req, res) => {
+    //   const result = await cartCollections.find().toArray();
+    //   res.send(result);
+    // });
+
+    // GET ALL CARTS ITEMS INDIVIDUALLY //
 
     app.get("/carts", async (req, res) => {
-      const result = await cartCollections.find().toArray();
+      const email = req.query.email;
+
+      const query = { email: email };
+
+      const result = await cartCollections.find(query).toArray();
       res.send(result);
     });
 
