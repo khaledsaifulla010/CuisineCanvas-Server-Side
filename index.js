@@ -99,6 +99,20 @@ async function run() {
       const result = await userCollections.deleteOne(query);
       res.send(result);
     });
+
+    // MAkE A USER ROLE //
+
+    app.patch("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: "Admin",
+        },
+      };
+      const result = await userCollections.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
   } finally {
   }
 }
