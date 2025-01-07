@@ -26,6 +26,7 @@ async function run() {
     // ALL DATABASE COLLECTION//
     const menuCollections = client.db("CuisineCanvas").collection("menu");
     const cartCollections = client.db("CuisineCanvas").collection("carts");
+    const userCollections = client.db("CuisineCanvas").collection("users");
 
     // GET ALL MENU DATA //
 
@@ -57,6 +58,14 @@ async function run() {
     app.post("/carts", async (req, res) => {
       const cartItem = req.body;
       const result = await cartCollections.insertOne(cartItem);
+      res.send(result);
+    });
+
+    // POST ALL USERS //
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollections.insertOne(user);
       res.send(result);
     });
 
