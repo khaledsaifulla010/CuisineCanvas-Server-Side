@@ -92,6 +92,13 @@ async function run() {
       const result = await cartCollections.deleteOne(query);
       res.send(result);
     });
+    // DELETE A SINGLE USER //
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollections.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
