@@ -53,6 +53,13 @@ async function run() {
       res.send(result);
     });
 
+    // GET ALL USERS //
+
+    app.get("/users", async (req, res) => {
+      const result = await userCollections.find().toArray();
+      res.send(result);
+    });
+
     // POST CART ITEMS //
 
     app.post("/carts", async (req, res) => {
