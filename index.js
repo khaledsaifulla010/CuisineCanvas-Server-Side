@@ -33,6 +33,23 @@ async function run() {
       res.send({ token });
     });
 
+    // MIDDLEWARE (VERIFY TOKEN)
+
+    const verifyToken = (req, res, next) => {
+      console.log("Inside Verify token", req.headers.authorization);
+      if (!req.headers.authorization) {
+        return res.status(401).send({ message: "Forbidden Access" });
+      }
+      const token = req.headers.authorization.split(" ")[1];
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) {
+          return res.status(401).send({ message: "Forbidden Access" });
+        }
+        req.decoded = decoded;
+        next();
+      });
+    };
+
     // ALL DATABASE COLLECTION//
     const menuCollections = client.db("CuisineCanvas").collection("menu");
     const cartCollections = client.db("CuisineCanvas").collection("carts");
@@ -65,7 +82,7 @@ async function run() {
 
     // GET ALL USERS //
 
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyToken, async (req, res) => {
       const result = await userCollections.find().toArray();
       res.send(result);
     });
