@@ -50,6 +50,19 @@ async function run() {
       });
     };
 
+    // VERIFY ADMIN AFTER VERIFY TOKEN
+
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email;
+      const query = { email: email };
+      const user = await userCollections.findOne(query);
+      const isAdmin = user?.role === "Admin";
+      if (!isAdmin) {
+        return res.status(403).send({ message: "Forbidden Access" });
+      }
+      next();
+    };
+
     // ALL DATABASE COLLECTION//
     const menuCollections = client.db("CuisineCanvas").collection("menu");
     const cartCollections = client.db("CuisineCanvas").collection("carts");
@@ -82,15 +95,15 @@ async function run() {
 
     // GET ALL USERS //
 
-    app.get("/users", verifyToken, async (req, res) => {
+    app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
       const result = await userCollections.find().toArray();
       res.send(result);
     });
 
-    app.get("/users/admin:email", verifyToken, async (req, res) => {
+    app.get("/users/admin/:email", verifyToken, async (req, res) => {
       const email = req.params.email;
       if (email !== req.decoded.email) {
-        return res.status(403).send({ message: "Unauthorized Access" });
+        return res.status(403).send({ message: "Forbidden Access" });
       }
       const query = { email: email };
       const user = await userCollections.findOne(query);
