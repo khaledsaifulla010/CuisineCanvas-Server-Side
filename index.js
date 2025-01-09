@@ -87,6 +87,20 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/users/admin:email", verifyToken, async (req, res) => {
+      const email = req.params.email;
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: "Unauthorized Access" });
+      }
+      const query = { email: email };
+      const user = await userCollections.findOne(query);
+      let admin = false;
+      if (user) {
+        admin = user?.role === "Admin";
+      }
+      res.send({ admin });
+    });
+
     // POST CART ITEMS //
 
     app.post("/carts", async (req, res) => {
