@@ -68,6 +68,9 @@ async function run() {
     const menuCollections = client.db("CuisineCanvas").collection("menu");
     const cartCollections = client.db("CuisineCanvas").collection("carts");
     const userCollections = client.db("CuisineCanvas").collection("users");
+    const paymentCollections = client
+      .db("CuisineCanvas")
+      .collection("payments");
 
     // GET ALL MENU DATA //
 
@@ -185,6 +188,24 @@ async function run() {
       res.send({
         clientSecret: paymentIntent.client_secret,
       });
+    });
+
+    // Payments Post
+
+    app.post("/payments", async (req, res) => {
+      const payment = req.body;
+      const paymentResult = await paymentCollections.insertOne(payment);
+
+      //carefully delete each item
+
+      console.log("payment info", payment);
+      const query = {
+        _id: {
+          $in: payment.cartIds.map((id) => new ObjectId(id)),
+        },
+      };
+      const deleteResult = await cartCollections.deleteMany(query);
+      res.send({ paymentResult, deleteResult });
     });
   } finally {
   }
